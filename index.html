@@ -176,6 +176,46 @@
             conversationDiv.scrollTop = conversationDiv.scrollHeight;
         }
 
+        function renderMarkdown(markdownText) {
+
+            // Convert markdown to HTML
+            let html = markdownText
+                // Paragraphs (two newlines)
+                .replace(/\n\n+/g, '</p><p>')
+                // Single newlines within paragraphs
+                .replace(/\n/g, '<br>')
+                // Headings (#, ##, ###)
+                .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+                .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+                .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+                // Bold (**text** or __text__)
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                // Italic (*text* or _text_)
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/_(.*?)_/g, '<em>$1</em>')
+                // Code blocks (```code```)
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                // Unordered lists (- or * at start of line)
+                .replace(/^[-*] (.*)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+                // Ordered lists (1. at start of line)
+                .replace(/^\d+\. (.*)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>\n?)+/g, '<ol>$&</ol>');
+
+            // Wrap content in paragraph tags if not already wrapped
+            html = `<p>${html}</p>`;
+            
+            // Clean up any empty paragraphs and consecutive breaks
+            html = html
+                .replace(/<p>\s*<\/p>/g, '')
+                .replace(/(<br>)+/g, '<br>');
+
+            // Set the HTML content
+            return html.trim();
+        }
+
+
         async function sendToLLM(prompt, history, systemPrompt, llmId) {
             if (!conversationActive) return null;
 
@@ -222,7 +262,8 @@
                                     if (data.content) {
                                         result += data.content;
                                         result = result.replace(/<\|[^>]*>/g, ''); // Remove trailing cruft
-                                        responseDiv.textContent = result;
+                                        // responseDiv.textContent = result;
+                                        responseDiv.innerHTML = renderMarkdown(result);
                                         document.getElementById('conversation').scrollTop = document.getElementById('conversation').scrollHeight;
                                     }
                                 } catch (error) {

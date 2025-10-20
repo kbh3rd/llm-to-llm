@@ -1,6 +1,6 @@
 ## LLM-to-LLM Conversation Orchestrator
 
-This page interacts with the APIs on two
+The HTML page in ```index.html``` interacts with the APIs on two
 [llama.cpp](https://github.com/ggml-org/llama.cpp) Large Language Model
 servers, *i.e.*, chatbots, orchestrating an automatic conversation between
 them. The servers can be on the same machine, on two separate machines,
@@ -37,8 +37,8 @@ could be useful in experimental environments with more than two chatbots availab
 *Effort: Easy*
 2. Better CSS layout and colors.
 *Effort: Easy*
-3. Interpret and properly render mark down formatting in the bots' responses.
-*Effort: Easy to moderate*
+3. ~~Interpret and properly render markdown formatting in the bots' responses.~~
+*Done!*
 4. Hide/Reveal the configuration elements of the page with a mouse click or tap to clean up
 the page.
 *Effort: Sorta Easy*
